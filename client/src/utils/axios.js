@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const instance = axios.create({
-  baseURL: 'https://elevate-workforce-api.onrender.com/api',
+  baseURL: 'https://elevate-workforce.onrender.com/api',
 });
 
 // Add a request interceptor to attach the JWT token

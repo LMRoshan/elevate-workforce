@@ -40,10 +40,8 @@ const Register = () => {
         role,
       })
 
-      // Extract token and user from the registration response
       const { token, user } = data.data;
 
-      // Save token for the Axios interceptor to prevent 401 errors
       localStorage.setItem('token', token);
       localStorage.setItem('user', JSON.stringify(user));
 

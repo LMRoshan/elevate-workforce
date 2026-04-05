@@ -2,12 +2,14 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import axios from '../utils/axios'
+// 1. Import the icon
+import { HiArrowLeft } from 'react-icons/hi'
 
 const Login = () => {
   const [formData, setFormData] = useState({ email: '', password: '' })
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
- const { login } = useAuth()
+  const { login } = useAuth()
   const navigate = useNavigate()
 
   const handleChange = (e) => {
@@ -39,7 +41,7 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-neutral flex flex-col items-center justify-center px-4">
+    <div className="min-h-screen bg-neutral flex flex-col items-center justify-center px-4 py-10">
       {/* Logo */}
       <Link to="/" className="flex items-center space-x-2 mb-8">
         <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center">
@@ -51,7 +53,17 @@ const Login = () => {
       </Link>
 
       {/* Card */}
-      <div className="card w-full max-w-md">
+      {/* 2. Added relative and pt-12 to handle the absolute positioned back button */}
+      <div className="card w-full max-w-md relative pt-12">
+        {/* 3. Added the Back Button */}
+        <Link 
+          to="/" 
+          className="absolute top-6 left-8 flex items-center text-xs font-bold text-gray-400 hover:text-primary transition-all group"
+        >
+          <HiArrowLeft className="mr-2 group-hover:-translate-x-1 transition-transform" />
+          Back to Dashboard
+        </Link>
+
         <h2 className="font-headline text-2xl font-bold text-gray-900 mb-2">
           Welcome Back
         </h2>

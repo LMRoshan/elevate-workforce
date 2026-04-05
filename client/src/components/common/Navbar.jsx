@@ -5,11 +5,12 @@ import { useAuth } from '../../context/AuthContext'
 const Navbar = () => {
   const { user, logout, isEmployer, isJobSeeker, isAdmin } = useAuth()
   const navigate = useNavigate()
-  const location = useLocation() // Used to detect the active page
+  const location = useLocation()
   const [menuOpen, setMenuOpen] = useState(false)
 
   const handleLogout = () => {
     logout()
+    setMenuOpen(false)
     navigate('/')
   }
 
@@ -20,7 +21,6 @@ const Navbar = () => {
     return '/dashboard'
   }
 
-  // Helper function to handle active link styling
   const isActive = (path) => location.pathname === path
 
   return (
@@ -28,14 +28,14 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           
-          {/* Logo Section */}
+          {/* Logo Section - Reduced size on mobile (text-lg) */}
           <Link to="/" className="flex-shrink-0">
-            <span className="font-headline font-bold text-[#1e3a8a] text-xl tracking-tight">
+            <span className="font-headline font-bold text-[#1e3a8a] text-lg md:text-xl tracking-tight">
               Elevate Workforce Solutions
             </span>
           </Link>
 
-          {/* Navigation Links (Matches your Image) */}
+          {/* Desktop Navigation Links */}
           <div className="hidden md:flex items-center space-x-10 h-full">
             <Link 
               to={getDashboardLink()} 
@@ -74,7 +74,7 @@ const Navbar = () => {
             </Link>
           </div>
 
-          {/* Auth Section (Far Right) */}
+          {/* Desktop Auth Section */}
           <div className="hidden md:flex items-center space-x-4">
             {!user ? (
               <>
@@ -106,16 +106,92 @@ const Navbar = () => {
             )}
           </div>
 
-          {/* Mobile Menu Toggle */}
+          {/* Mobile Menu Toggle Button */}
           <div className="md:hidden flex items-center">
-            <button onClick={() => setMenuOpen(!menuOpen)} className="text-gray-600">
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7" />
-              </svg>
+            <button 
+              onClick={() => setMenuOpen(!menuOpen)} 
+              className="text-gray-600 p-2 focus:outline-none"
+            >
+              {menuOpen ? (
+                // "X" Icon when menu is open
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              ) : (
+                // Burger Icon when menu is closed
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7" />
+                </svg>
+              )}
             </button>
           </div>
         </div>
       </div>
+
+      {/* Mobile Menu Content (Shows when menuOpen is true) */}
+      {menuOpen && (
+        <div className="md:hidden bg-white border-t border-gray-100 shadow-lg">
+          <div className="px-4 pt-2 pb-6 space-y-2">
+            <Link 
+              to={getDashboardLink()} 
+              className={`block px-3 py-3 rounded-lg text-base font-medium ${isActive(getDashboardLink()) ? 'bg-blue-50 text-[#1e3a8a]' : 'text-slate-600'}`}
+              onClick={() => setMenuOpen(false)}
+            >
+              Dashboard
+            </Link>
+            <Link 
+              to="/jobs" 
+              className={`block px-3 py-3 rounded-lg text-base font-medium ${isActive('/jobs') ? 'bg-blue-50 text-[#1e3a8a]' : 'text-slate-600'}`}
+              onClick={() => setMenuOpen(false)}
+            >
+              Search Jobs
+            </Link>
+            <Link 
+              to="/messages" 
+              className={`block px-3 py-3 rounded-lg text-base font-medium ${isActive('/messages') ? 'bg-blue-50 text-[#1e3a8a]' : 'text-slate-600'}`}
+              onClick={() => setMenuOpen(false)}
+            >
+              Messages
+            </Link>
+
+            <div className="pt-4 border-t border-gray-100">
+              {!user ? (
+                <div className="flex flex-col space-y-3">
+                  <Link 
+                    to="/login" 
+                    className="w-full text-center py-3 text-[#1e3a8a] font-semibold bg-gray-50 rounded-xl"
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    Login
+                  </Link>
+                  <Link 
+                    to="/register" 
+                    className="w-full text-center py-3 bg-[#1e3a8a] text-white font-semibold rounded-xl"
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    Sign Up
+                  </Link>
+                </div>
+              ) : (
+                <div className="flex flex-col space-y-3">
+                   <div className="flex items-center px-3 py-2 space-x-3 text-slate-700">
+                    <div className="w-8 h-8 bg-[#1e3a8a] rounded-full flex items-center justify-center text-white text-xs font-bold">
+                      {user.name?.charAt(0).toUpperCase()}
+                    </div>
+                    <span className="font-medium">{user.name}</span>
+                  </div>
+                  <button 
+                    onClick={handleLogout}
+                    className="w-full text-left px-3 py-3 text-red-600 font-medium hover:bg-red-50 rounded-lg"
+                  >
+                    Logout
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </nav>
   )
 }
